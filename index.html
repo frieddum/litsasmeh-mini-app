@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#e95d3f" />
     <meta name="color-scheme" content="light" />
-    <title>Лицесмешиватель 3000</title>\n    <link rel="icon" href="./favicon.svg" />\n    <meta property="og:image" content="./og.png" />
-    <link rel="stylesheet" href="./mini.css?v=4" />
+    <title>Лицесмешиватель 3000</title>
+    <link rel="icon" href="./favicon.svg" />
+    <meta property="og:image" content="./og.png" />
+    <link rel="stylesheet" href="./mini.css?v=5" />
     <script src="https://telegram.org/js/telegram-web-app.js?63" defer></script>
-    <script src="./app.js?v=4" defer></script>
+    <script src="./app.js?v=5" defer></script>
   </head>
   <body>
     <main class="app-shell">
@@ -19,6 +21,7 @@
         </div>
         <p class="lede">Крути ползунки, пока не получится совсем дурацкое лицо.</p>
       </header>
+
 
       <section class="workspace" aria-label="Интерактивный генератор лиц">
         <section class="stage-card">
@@ -34,88 +37,3 @@
               <span class="meta-label">ОБЪЕКТ НАБЛЮДЕНИЯ</span>
               <strong id="face-name">Инспектор Булочка</strong>
             </div>
-            <span id="face-code" class="face-code">ДНК 040442</span>
-          </div>
-        </section>
-
-        <aside class="control-card">
-          <div class="control-intro">
-            <span class="step-badge">01</span>
-            <div>
-              <p class="kicker">НАСТРОЙКА ХАРАКТЕРА</p>
-              <p>Научно приблизительно.</p>
-            </div>
-          </div>
-
-          <form id="controls" onsubmit="return false">
-            <label class="field">
-              <span><b>Поворот</b><output id="yaw-output">0°</output></span>
-              <input id="yaw" type="range" min="-58" max="58" value="0" />
-              <small><i>сюда</i><i>туда</i></small>
-            </label>
-            <label class="field">
-              <span><b>Подбородок</b><output id="pitch-output">0°</output></span>
-              <input id="pitch" type="range" min="-26" max="26" value="0" />
-              <small><i>важно</i><i>свысока</i></small>
-            </label>
-            <label class="field field-mood">
-              <span><b>Настроение</b><output id="mood-output">слегка норм</output></span>
-              <input id="mood" type="range" min="-100" max="100" value="18" />
-              <small><i>«ну вот»</i><i>«о да»</i></small>
-            </label>
-            <label class="field field-weird">
-              <span><b>Градус абсурда</b><output id="weird-output">42%</output></span>
-              <input id="weird" type="range" min="0" max="100" value="42" />
-              <small><i>паспорт</i><i>легенда</i></small>
-            </label>
-            <label class="select-field">
-              <span>Аксессуар</span>
-              <select id="accessory">
-                <option value="auto">Судьба решит</option>
-                <option value="none">Без украшательств</option>
-                <option value="glasses">Очки эксперта</option>
-                <option value="moustache">Усы авторитета</option>
-                <option value="hat">Колпак триумфа</option>
-                <option value="antenna">Антенна инсайта</option>
-                <option value="eyepatch">Повязка интриги</option>
-              </select>
-            </label>
-            <label class="seed-field">
-              <span>Лицевой seed</span>
-              <input id="seed" type="number" min="1" max="999999" value="40442" inputmode="numeric" />
-            </label>
-            <div class="button-stack">
-              <button id="shuffle" class="button button-primary" type="button"><span>СМЕШАТЬ ЛИЦО</span><kbd>ЕЩЁ!</kbd></button>
-              <button id="surprise" class="button button-secondary" type="button">Мне сегодня какое?</button>
-            </div>
-          </form>
-
-          <div class="export-zone">
-            <span class="step-badge step-dark">02</span>
-            <button id="export" class="export-button" type="button"><span>Скачать портрет</span><small>PNG · 960 × 960</small></button>
-          </div>
-          <p id="status" class="status" role="status" aria-live="polite">Лицо стабильно. Почти.</p>
-        </aside>
-      </section>
-
-      <footer>
-        <p>Потяни лицо пальцем или покрути ползунки.</p>
-        <p>Ни одно лицо не отправляется в облако.</p>
-      </footer>
-      <noscript>Для лицесмешивания нужен JavaScript.</noscript>
-    </main>
-    <script>
-      window.addEventListener('load', function () {
-        window.setTimeout(function () {
-          var canvas = document.getElementById('stage');
-          var status = document.getElementById('status');
-          if (canvas && status && !canvas.getAttribute('data-render-signature')) {
-            status.textContent = 'Лицо не загрузилось. Обнови Telegram или открой меню ⋮ → Открыть в браузере.';
-            status.className += ' status-error';
-          }
-        }, 2200);
-      });
-    </script>
-  </body>
-</html>
-
