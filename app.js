@@ -538,24 +538,63 @@ function surpriseMe() {
   announce(`${outputs.name.textContent}: ${outputs.diagnosis.textContent}. ${outputs.treatment.textContent}`);
 }
 
+function dataUrlToFile(dataUrl, filename) {
+  const parts = dataUrl.split(",");
+  const mime = (parts[0].match(/:(.*?);/) || [])[1] || "image/png";
+  const bytes = atob(parts[1]);
+  const buffer = new Uint8Array(bytes.length);
+  for (let index = 0; index < bytes.length; index += 1) buffer[index] = bytes.charCodeAt(index);
+  return new File([buffer], filename, { type: mime, lastModified: Date.now() });
+}
+
+function downloadFileFallback(file) {
+  const url = URL.createObjectURL(file);
+  const link = document.createElement("a");
+  link.download = file.name;
+  link.href = url;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 2500);
+  announce(`Портрет ${outputs.name.textContent} скачан: 960 × 960 PNG.`);
+}
+
 function exportPortrait() {
   haptic("light");
   render();
-  canvas.toBlob((blob) => {
-    if (!blob) {
-      announce("PNG не сложился. Лицо сопротивляется.");
-      return;
-    }
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.download = `лицесмешиватель-${controls.seed.value}.png`;
-    link.href = url;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1200);
-    announce(`Портрет ${outputs.name.textContent} сохранён: 960 × 960 PNG.`);
-  }, "image/png");
+
+  const filename = `лицесмешиватель-${controls.seed.value}.png`;
+  let file;
+  try {
+    file = dataUrlToFile(canvas.toDataURL("image/png"), filename);
+  } catch (error) {
+    announce("PNG не сложился. Лицо сопротивляется.");
+    return;
+  }
+
+  const shareData = {
+    files: [file],
+    title: `Портрет: ${outputs.name.textContent}`,
+    text: `${outputs.diagnosis.textContent}. ${outputs.treatment.textContent}`,
+  };
+  const canShareFile = typeof navigator.share === "function"
+    && (typeof navigator.canShare !== "function" || navigator.canShare({ files: [file] }));
+
+  if (canShareFile) {
+    announce("Выбери «Сохранить изображение» или отправь портрет друзьям.");
+    navigator.share(shareData)
+      .then(() => announce(`Портрет ${outputs.name.textContent} готов.`))
+      .catch((error) => {
+        if (error && error.name === "AbortError") {
+          announce("Сохранение отменено. Лицо никуда не убежало.");
+          return;
+        }
+        downloadFileFallback(file);
+      });
+    return;
+  }
+
+  downloadFileFallback(file);
 }
 
 for (const control of Object.values(controls)) {
